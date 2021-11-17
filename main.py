@@ -1,15 +1,11 @@
-# from flask import Flask, request
-# from flask_restful import Api, Resource
-# import requests
-# # from data import *
+from flask import Flask, request
+from flask_restful import Api, Resource
+import requests
+
 #
 # app = Flask(__name__)
 # api = Api(app)
 #
-# # @app.route('/home')
-#
-# def home():
-#     return "hello, welcome to our website";
 #
 # TENBIS = "https://www.10bis.co.il/NextApi/GetRestaurantMenu?culture=en&uiCulture=en&restaurantId=19156&deliveryMethod=pickup"
 # dishes = {"pizzaA": {"id": 3, "desc": "tasty", "price": 45},
@@ -17,9 +13,7 @@
 #
 # class TenBis(Resource):
 #     def get(self, dish_id):
-#         self.getit(dish_id)
 #         response = requests.get(TENBIS)
-#         print(response)
 #         return dishes
 #
 #     def post(self, order: dict):
@@ -27,42 +21,28 @@
 #         print(request.form["pizzas"])
 #         return {"data": "posten"}
 #
-#     def getit(self, dish_id):
-#         print(dish_id)
-#
 #
 # api.add_resource(TenBis, "/drinks/<int:dish_id>")
 # # api.add_resource(TenBis, "/tenbis/<dict:order>")
-#
-#
-#
-# if __name__ == '__main__':
-#     app.run(debug=True)
-#
 
-from flask import Flask, request
-from flask_restful import Api, Resource
-import requests
-from flask import Flask
 
 app = Flask(__name__)
 
 TENBIS = "https://www.10bis.co.il/NextApi/GetRestaurantMenu?culture=en&uiCulture=en&restaurantId=19156&deliveryMethod=pickup"
 
 
-@app.route('/<type>')
-def home(type):
+@app.route('/<name>')
+def home(name):
     response = requests.get(TENBIS)
-    result = get_by_type((response.json()), type)
+    result = get_by_type((response.json()), name)
     return result
 
-def get_by_type(data: dict, type):
+def get_by_name(data: dict, name):
     tmp = data["Data"]
     for category in tmp["categoriesList"]:
-        if (category["categoryName"].lower() == type):
+        if (category["categoryName"].lower() == name):
             print(category["dishList"])
-            return dict([ (category["dishList"]["dishId"], category["dishList"]) for dish in category["dishList"] ])
-
+#             return dict([ (category["dishList"]["dishId"], category["dishList"]) for dish in category["dishList"] ]) #unfinished
     return "Not Found"
 
 if __name__ == "__main__":
